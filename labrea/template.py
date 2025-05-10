@@ -88,7 +88,15 @@ class Template(Evaluatable[str]):
             raise KeyNotFoundError((*e.args, "UNKNOWN")[0], self) from e
 
     def evaluate_options(self, options: Options) -> Options:
-        breakpoint()
+        """DOC:"""
+        from .option import Option
+
+        evaluated_options = {}
+
+        for key in self.keys(options):
+            evaluated_options = mix(evaluated_options, Option(key).evaluate_options(options))
+
+        return evaluated_options
 
     def validate(self, options: Options) -> None:
         """Validates that the template can be evaluated using the options."""

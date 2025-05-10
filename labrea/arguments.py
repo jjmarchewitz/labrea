@@ -102,6 +102,8 @@ class EvaluatableKwargs(Generic[P], Evaluatable["P.kwargs"]):
     def evaluate_options(self, options: Options) -> Options:
         output = options
 
+        # JAKE: this shouldn't return any options it doesnt use
+
         for key, value in self.kwargs.items():
             output = value.evaluate_options(output)
 

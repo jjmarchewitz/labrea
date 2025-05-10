@@ -156,6 +156,10 @@ def test_confectioner_templating():
     option.validate(present)
     assert option.keys(present) == {'A', 'V', 'C'}
 
+    assert option.evaluate_options(present) == {'A': 'Hello World!',
+                                                'V': 'Hello',
+                                                'C': 'World'}
+
     with pytest.raises(KeyNotFoundError) as excinfo:
         option.evaluate(missing)
         assert excinfo.value.key == 'C'
@@ -171,6 +175,10 @@ def test_confectioner_templating():
     assert option.explain(present) == {'A', 'V', 'C'}
     assert option.explain(missing) == {'A', 'V', 'C'}
     assert option.explain() == {'A'}
+
+    with pytest.raises(KeyNotFoundError) as excinfo:
+        option.evaluate_options(missing)
+        assert excinfo.value.key == 'C'
 
 
 def test_repr():
@@ -196,6 +204,8 @@ def test_with_options():
     assert w.explain({}) == set()
     assert w.explain({'A': 43}) == set()
 
+    # JAKE:
+
     assert repr(w) == "WithOptions(Option('A'), {'A': 42})"
 
 
@@ -214,6 +224,8 @@ def test_with_default_options():
     assert w.explain({}) == set()
     assert w.explain({'A': 43}) == {'A'}
 
+    # JAKE:
+
     assert repr(w) == "WithDefaultOptions(Option('A'), {'A': 42})"
 
 
@@ -226,6 +238,7 @@ def test_all_options():
     assert AllOptions.keys(options) == {'A', 'B', 'C'}
     assert AllOptions.explain(options) == {'A', 'B', 'C'}
     assert AllOptions.explain() == set()
+    # JAKE:
     assert repr(AllOptions) == "AllOptions"
 
 
@@ -237,6 +250,8 @@ def test_all_options_cannot_resolve():
     with pytest.raises(KeyNotFoundError) as excinfo:
         AllOptions.validate(options)
         assert excinfo.value.key == 'B'
+
+    # JAKE:
 
 
 def test_namespace_full():

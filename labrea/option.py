@@ -156,14 +156,20 @@ class Option(Evaluatable[A]):
         DOC:
         """
         if dotted_key_exists(self.key, options):
-            value = self.evaluate(options)
-            return self.set({}, value)
+            value = get_dotted_key(self.key, options)
+            used_options = {}
+            if isinstance(value, str):
+                used_options = Template(value).evaluate_options(options)
+                value = self.evaluate(options)
+
+            return self.set(used_options, value)
         elif self.default is not MISSING:
-            # Combine evaluated output and default evaluated output
             default_eval = self.set({}, self.default.evaluate(options))
             default_eval_opts = self.default.evaluate_options(options)
 
-            return mix(default_eval, default_eval_opts)
+            # Combine the actual result with the evaluate_options dict so that
+            # the result shows up under `self` as well as the default option.
+            return mix(default_eval_opts, default_eval)
         else:
             raise KeyNotFoundError(self.key, self)
 

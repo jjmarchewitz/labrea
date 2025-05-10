@@ -1,6 +1,7 @@
-from labrea.template import Template
-from labrea.exceptions import KeyNotFoundError
 import pytest
+
+from labrea.exceptions import KeyNotFoundError
+from labrea.template import Template
 
 
 def test_basic():
@@ -11,6 +12,7 @@ def test_basic():
     template.validate(options)
     assert template.keys(options) == {'GREETING'}
     assert template.explain(options) == {'GREETING'}
+    # JAKE:
 
 
 def test_malformed():
@@ -67,5 +69,6 @@ def test_confectioner_templating():
 
 
 def test_repr():
-    assert repr(Template('{GREETING}, {:name:}!', name='World')) == "Template('{GREETING}, {:name:}!', name=Value('World'))"
+    assert repr(Template('{GREETING}, {:name:}!', name='World')
+                ) == "Template('{GREETING}, {:name:}!', name=Value('World'))"
     assert repr(Template('{GREETING}')) == "Template('{GREETING}')"
