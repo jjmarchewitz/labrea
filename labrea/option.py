@@ -175,9 +175,9 @@ class Option(Evaluatable[A]):
         """
         if dotted_key_exists(self.key, options):
             value = get_dotted_key(self.key, options)
-            used_options = {}
+            used_options: Options = {}
             if isinstance(value, str):
-                used_options: Options = Template(value).evaluate_options(options)
+                used_options = Template(value).evaluate_options(options)
                 value = self.evaluate(options)
 
             return self.set(used_options, value)
