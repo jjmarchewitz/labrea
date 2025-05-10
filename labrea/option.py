@@ -151,12 +151,21 @@ class Option(Evaluatable[A]):
 
         return value
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         """
         DOC:
         """
-        value = self.evaluate(options)
-        return self.set(options, value)
+        if dotted_key_exists(self.key, options):
+            value = self.evaluate(options)
+            return self.set({}, value)
+        elif self.default is not MISSING:
+            # Combine evaluated output and default evaluated output
+            default_eval = self.set({}, self.default.evaluate(options))
+            default_eval_opts = self.default.evaluate_options(options)
+
+            return mix(default_eval, default_eval_opts)
+        else:
+            raise KeyNotFoundError(self.key, self)
 
     def validate(self, options: Options) -> None:
         """Validates that the key exists in the options dictionary.
@@ -367,7 +376,7 @@ class WithOptions(Evaluatable[B]):
         """Evaluate the wrapped Evaluatable object with the provided options."""
         return self.evaluatable.evaluate(self._options(options))
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         breakpoint()
 
     def validate(self, options: Options) -> None:
@@ -433,7 +442,7 @@ class _AllOptions(Evaluatable[Options]):
         except KeyError as e:
             raise KeyNotFoundError(e.args[0], self) from e
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         """DOC:"""
         breakpoint()
 
@@ -481,7 +490,7 @@ class Namespace(Evaluatable[Options]):
     def evaluate(self, options: Options) -> Options:
         return get_dotted_key(self._key, self._populate({}, options))
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         breakpoint()
 
     def validate(self, options: Options) -> None:

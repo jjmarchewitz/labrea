@@ -49,7 +49,7 @@ class _DependsOn(Generic[A, B], Evaluatable[B]):
     def evaluate(self, options: Options) -> B:
         return self.evaluatable.evaluate(options)
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         breakpoint()
 
     def validate(self, options: Options) -> None:
@@ -143,7 +143,7 @@ class Switch(Evaluatable[V]):
         """Evaluate the switch statement and return the result."""
         return self._lookup(options).evaluate(options)
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         breakpoint()
 
     def validate(self, options: Options) -> None:
@@ -230,7 +230,7 @@ class CaseWhen(Generic[A, B], Evaluatable[B]):
         """Evaluate the case when statement and return the result."""
         return self._bound(options).evaluate(options)
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         breakpoint()
 
     def validate(self, options: Options) -> None:

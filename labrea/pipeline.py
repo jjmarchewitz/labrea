@@ -148,7 +148,7 @@ class Pipeline(
         rest = self.rest.evaluate(options) if self.rest else lambda x: x
         return lambda x: tail(rest(x))
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         """DOC:"""
         breakpoint()
 

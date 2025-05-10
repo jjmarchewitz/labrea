@@ -338,7 +338,7 @@ class Cached(Evaluatable[A]):
 
         return CacheSetRequest(self.evaluatable, options, value, self.cache).run()
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         # TODO: figure out the caching stuff
         return self.evaluatable.evaluate_options(options)
 

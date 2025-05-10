@@ -87,7 +87,7 @@ class Template(Evaluatable[str]):
         except KeyError as e:
             raise KeyNotFoundError((*e.args, "UNKNOWN")[0], self) from e
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         breakpoint()
 
     def validate(self, options: Options) -> None:

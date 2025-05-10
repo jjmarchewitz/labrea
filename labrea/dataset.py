@@ -118,7 +118,7 @@ class Dataset(Evaluatable[A]):
         """Evaluates the dataset using the provided options."""
         return self._composed.evaluate(options)
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         """DOC:"""
         return self._composed.evaluate_options(options)
 

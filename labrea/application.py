@@ -60,7 +60,7 @@ class FunctionApplication(Generic[P, A], Evaluatable[A]):
         args = self.arguments.evaluate(options)
         return func(*args.args, **args.kwargs)
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         # TODO: somehow incorporate func
         return self.arguments.evaluate_options(options)
 
@@ -207,8 +207,8 @@ class PartialApplication(Generic[P, A], Evaluatable[Callable[..., A]]):
         args = self.arguments.evaluate(options)
         return functools.partial(func, *args.args, **args.kwargs)
 
-    def evaluate_options(self, options) -> Options:
-        breakpoint()
+    def evaluate_options(self, options: Options) -> Options:
+        return self.arguments.evaluate_options(options)
 
     def validate(self, options: Options) -> None:
         self.func.validate(options)

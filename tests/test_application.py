@@ -1,7 +1,8 @@
+import pytest
+
 from labrea import Option
 from labrea.application import FunctionApplication, PartialApplication
 from labrea.exceptions import EvaluationError, KeyNotFoundError
-import pytest
 
 
 def add(x: float, y: float) -> float:
@@ -43,7 +44,8 @@ def test_lift():
     with pytest.raises(TypeError):
         FunctionApplication.lift(bad)
 
-    assert FunctionApplication.lift(bad, a=Option('A'), b=Option('B')).evaluate({'A': 1, 'B': 2}) == 3
+    assert FunctionApplication.lift(bad, a=Option('A'), b=Option('B')
+                                    ).evaluate({'A': 1, 'B': 2}) == 3
 
     @FunctionApplication.lift
     def good_deco(a: float = Option('A'), b: float = Option('B')) -> float:
@@ -76,6 +78,8 @@ def test_partial_application():
         app.keys({})
 
     assert app.explain() == {'B'}
+
+    assert app.evaluate_options({'A': 1, 'B': 2}) == {'B': 2}
 
     assert repr(app) == "PartialApplication(add, Option('B'))"
 

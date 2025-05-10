@@ -174,7 +174,7 @@ class Logged(Evaluatable[A]):
             self._request(options).run()
             return value
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         # TODO: figure out logging stuff
         return self.evaluatable.evaluate_options(options)
 

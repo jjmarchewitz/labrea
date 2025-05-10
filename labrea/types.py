@@ -428,7 +428,7 @@ class Value(Evaluatable[A]):
 
     def evaluate_options(self, options: Options) -> Options:
         """DOC:"""
-        breakpoint()
+        return {}
 
     def validate(self, options: Options) -> None:
         """Always passes validation."""
@@ -471,7 +471,7 @@ class Apply(Generic[A, B], Evaluatable[B]):
         value = self.evaluatable(options)
         return self.func(options)(value)
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         breakpoint()
 
     def validate(self, options: Options) -> None:
@@ -512,7 +512,7 @@ class Bind(Generic[A, B], Evaluatable[B]):
         """Bind the function to the result of evaluating the object."""
         return self.func(self.evaluatable(options)).evaluate(options)
 
-    def evaluate_options(self, options) -> Options:
+    def evaluate_options(self, options: Options) -> Options:
         breakpoint()
 
     def validate(self, options: Options) -> None:

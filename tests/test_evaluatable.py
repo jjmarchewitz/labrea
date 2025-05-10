@@ -11,6 +11,7 @@ def test_value():
     assert value.validate({}) is None
     assert value.keys({}) == set()
     assert value.explain() == value.explain({}) == set()
+    assert value.evaluate_options({'A': 1}) == {}
     assert repr(value) == "Value(42)"
     assert value == value
     assert value != Value(43)
@@ -95,11 +96,3 @@ def test_fingerprint():
 def test_result():
     option = Option('A')
     assert option.result is option
-
-
-def test_evaluate_options():
-    option_a = Option('A')
-    assert option_a.evaluate_options({'A': 1}) == {'A': 1}
-
-    option_b = Option('B', 2)
-    assert option_b.evaluate_options({}) == {'B': 2}
