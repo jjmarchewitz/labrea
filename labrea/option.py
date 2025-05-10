@@ -498,7 +498,7 @@ class Namespace(Evaluatable[Options]):
         return get_dotted_key(self._key, self._populate({}, options))
 
     def evaluate_options(self, options: Options) -> Options:
-        breakpoint()
+        return self.evaluate(options)
 
     def validate(self, options: Options) -> None:
         for name in self._members:
