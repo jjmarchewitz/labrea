@@ -1,11 +1,29 @@
 import functools
 import warnings
-from typing import (Any, Callable, Container, Dict, Generic, List, Mapping,
-                    Optional, Set, Type, TypeVar, Union, cast, overload)
+from typing import (
+    Any,
+    Callable,
+    Container,
+    Dict,
+    Generic,
+    List,
+    Mapping,
+    Optional,
+    Set,
+    Type,
+    TypeVar,
+    Union,
+    cast,
+    overload,
+)
 
 from confectioner import mix
-from confectioner.templating import (dotted_key_exists, get_dotted_key,
-                                     resolve, set_dotted_key)
+from confectioner.templating import (
+    dotted_key_exists,
+    get_dotted_key,
+    resolve,
+    set_dotted_key,
+)
 
 from ._missing import MISSING, MaybeMissing
 from .application import FunctionApplication
@@ -159,7 +177,7 @@ class Option(Evaluatable[A]):
             value = get_dotted_key(self.key, options)
             used_options = {}
             if isinstance(value, str):
-                used_options = Template(value).evaluate_options(options)
+                used_options: Options = Template(value).evaluate_options(options)
                 value = self.evaluate(options)
 
             return self.set(used_options, value)
@@ -277,8 +295,7 @@ class Option(Evaluatable[A]):
                 Option MY_PACKAGE.MODULE-2.A (default 10)
         """
         if isinstance(__namespace, str):
-            # type: ignore[return-value]
-            return lambda cls: Namespace._from_type(cls, name=__namespace)
+            return lambda cls: Namespace._from_type(cls, name=__namespace)  # type: ignore[return-value]
         return Namespace._from_type(__namespace)
 
     @staticmethod

@@ -1,8 +1,18 @@
 import json
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import (Callable, Generic, Mapping, Optional, Protocol, Sequence,
-                    Set, TypeVar, Union, overload)
+from typing import (
+    Callable,
+    Generic,
+    Mapping,
+    Optional,
+    Protocol,
+    Sequence,
+    Set,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from confectioner.templating import get_dotted_key
 

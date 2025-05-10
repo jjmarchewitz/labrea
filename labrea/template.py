@@ -91,10 +91,12 @@ class Template(Evaluatable[str]):
         """DOC:"""
         from .option import Option
 
-        evaluated_options = {}
+        evaluated_options: Options = {}
 
         for key in self.keys(options):
-            evaluated_options = mix(evaluated_options, Option(key).evaluate_options(options))
+            evaluated_options = mix(
+                evaluated_options, Option(key).evaluate_options(options)
+            )
 
         return evaluated_options
 

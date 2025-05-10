@@ -6,8 +6,20 @@ else:
     from typing import Never
 
 import functools
-from typing import (Any, Callable, Generic, Hashable, Mapping, Optional,
-                    Sequence, Set, Tuple, TypeVar, Union, overload)
+from typing import (
+    Any,
+    Callable,
+    Generic,
+    Hashable,
+    Mapping,
+    Optional,
+    Sequence,
+    Set,
+    Tuple,
+    TypeVar,
+    Union,
+    overload,
+)
 
 from ._missing import MISSING, MaybeMissing
 from .exceptions import EvaluationError, InsufficientInformationError

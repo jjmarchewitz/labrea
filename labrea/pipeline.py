@@ -6,12 +6,20 @@ else:
     from typing import Concatenate, ParamSpec
 
 import inspect
-from typing import (Any, Callable, Iterable, Iterator, Optional, Set, TypeVar,
-                    cast, overload)
+from typing import (
+    Any,
+    Callable,
+    Iterable,
+    Iterator,
+    Optional,
+    Set,
+    TypeVar,
+    cast,
+    overload,
+)
 
 from .application import PartialApplication
-from .types import (Evaluatable, MaybeEvaluatable, Options, Transformation,
-                    Value)
+from .types import Evaluatable, MaybeEvaluatable, Options, Transformation, Value
 
 A = TypeVar("A")
 B = TypeVar("B", covariant=True)

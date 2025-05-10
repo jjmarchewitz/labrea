@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import (Any, Callable, Dict, Generic, Optional, Set, TypeVar,
-                    Union, overload)
+from typing import Any, Callable, Dict, Generic, Optional, Set, TypeVar, Union, overload
 
 from . import runtime
 from .option import Option

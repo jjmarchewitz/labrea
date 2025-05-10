@@ -7,8 +7,7 @@ else:
 
 import functools
 import inspect
-from typing import (Callable, Dict, Generic, Optional, Set, TypeVar, Union,
-                    overload)
+from typing import Callable, Dict, Generic, Optional, Set, TypeVar, Union, overload
 
 from .arguments import Arguments, arguments
 from .types import Evaluatable, MaybeEvaluatable, Options

@@ -8,8 +8,19 @@ else:
 import functools
 import logging
 import typing
-from typing import (Any, Callable, Dict, Generic, Hashable, List, Optional,
-                    Set, TypeVar, Union, cast)
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Generic,
+    Hashable,
+    List,
+    Optional,
+    Set,
+    TypeVar,
+    Union,
+    cast,
+)
 
 from confectioner import mix
 
