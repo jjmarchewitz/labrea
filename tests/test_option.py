@@ -204,7 +204,8 @@ def test_with_options():
     assert w.explain({}) == set()
     assert w.explain({'A': 43}) == set()
 
-    # JAKE:
+    assert w.evaluate_options({}) == {'A': 42}
+    assert w.evaluate_options({'A': 43}) == {'A': 42}
 
     assert repr(w) == "WithOptions(Option('A'), {'A': 42})"
 
@@ -224,7 +225,8 @@ def test_with_default_options():
     assert w.explain({}) == set()
     assert w.explain({'A': 43}) == {'A'}
 
-    # JAKE:
+    assert w.evaluate_options({}) == {'A': 42}
+    assert w.evaluate_options({'A': 43}) == {'A': 43}
 
     assert repr(w) == "WithDefaultOptions(Option('A'), {'A': 42})"
 
@@ -238,7 +240,7 @@ def test_all_options():
     assert AllOptions.keys(options) == {'A', 'B', 'C'}
     assert AllOptions.explain(options) == {'A', 'B', 'C'}
     assert AllOptions.explain() == set()
-    # JAKE:
+    assert AllOptions.evaluate_options(options) == resolved
     assert repr(AllOptions) == "AllOptions"
 
 
@@ -250,8 +252,9 @@ def test_all_options_cannot_resolve():
     with pytest.raises(KeyNotFoundError) as excinfo:
         AllOptions.validate(options)
         assert excinfo.value.key == 'B'
-
-    # JAKE:
+    with pytest.raises(KeyNotFoundError) as excinfo:
+        AllOptions.evaluate_options(options)
+        assert excinfo.value.key == 'B'
 
 
 def test_namespace_full():

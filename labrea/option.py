@@ -383,7 +383,8 @@ class WithOptions(Evaluatable[B]):
         return self.evaluatable.evaluate(self._options(options))
 
     def evaluate_options(self, options: Options) -> Options:
-        breakpoint()
+        """DOC:"""
+        return self.evaluatable.evaluate_options(self._options(options))
 
     def validate(self, options: Options) -> None:
         """Validate the wrapped Evaluatable object with the provided options."""
@@ -450,7 +451,7 @@ class _AllOptions(Evaluatable[Options]):
 
     def evaluate_options(self, options: Options) -> Options:
         """DOC:"""
-        breakpoint()
+        return self.evaluate(options)
 
     def validate(self, options: Options) -> None:
         _ = self.evaluate(options)
