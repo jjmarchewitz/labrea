@@ -89,7 +89,6 @@ class Template(Evaluatable[str]):
 
     def evaluate_options(self, options) -> Options:
         breakpoint()
-        pass
 
     def validate(self, options: Options) -> None:
         """Validates that the template can be evaluated using the options."""

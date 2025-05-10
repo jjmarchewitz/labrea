@@ -6,20 +6,8 @@ else:
     from typing import Never
 
 import functools
-from typing import (
-    Any,
-    Callable,
-    Generic,
-    Hashable,
-    Mapping,
-    Optional,
-    Sequence,
-    Set,
-    Tuple,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import (Any, Callable, Generic, Hashable, Mapping, Optional,
+                    Sequence, Set, Tuple, TypeVar, Union, overload)
 
 from ._missing import MISSING, MaybeMissing
 from .exceptions import EvaluationError, InsufficientInformationError
@@ -60,6 +48,9 @@ class _DependsOn(Generic[A, B], Evaluatable[B]):
 
     def evaluate(self, options: Options) -> B:
         return self.evaluatable.evaluate(options)
+
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
 
     def validate(self, options: Options) -> None:
         self.evaluatable.validate(options)
@@ -152,6 +143,9 @@ class Switch(Evaluatable[V]):
         """Evaluate the switch statement and return the result."""
         return self._lookup(options).evaluate(options)
 
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
+
     def validate(self, options: Options) -> None:
         """Validate that the switch statement can be evaluated."""
         self._lookup(options).validate(options)
@@ -235,6 +229,9 @@ class CaseWhen(Generic[A, B], Evaluatable[B]):
     def evaluate(self, options: Options) -> B:
         """Evaluate the case when statement and return the result."""
         return self._bound(options).evaluate(options)
+
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
 
     def validate(self, options: Options) -> None:
         """Validate that the case when statement can be evaluated."""

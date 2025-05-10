@@ -71,7 +71,6 @@ class Overloaded(Evaluatable[A]):
 
     def evaluate_options(self, options) -> Options:
         breakpoint()
-        pass
 
     def validate(self, options: Options) -> None:
         """Validate the dispatch and the selected implementation."""

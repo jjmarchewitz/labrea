@@ -41,6 +41,9 @@ class Coalesce(Evaluatable[A]):
         """Evaluate the first Evaluatable that can be evaluated"""
         return self._delegate("evaluate", options)
 
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
+
     def validate(self, options: Options) -> None:
         """Determines if any of the Evaluatables can be validated."""
         return self._delegate("validate", options)

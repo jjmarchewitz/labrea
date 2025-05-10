@@ -1,8 +1,8 @@
 import pytest
 
-from labrea.types import Evaluatable, Value
 from labrea.exceptions import EvaluationError, KeyNotFoundError
 from labrea.option import Option
+from labrea.types import Evaluatable, Value
 
 
 def test_value():
@@ -95,3 +95,11 @@ def test_fingerprint():
 def test_result():
     option = Option('A')
     assert option.result is option
+
+
+def test_evaluate_options():
+    option_a = Option('A')
+    assert option_a.evaluate_options({'A': 1}) == {'A': 1}
+
+    option_b = Option('B', 2)
+    assert option_b.evaluate_options({}) == {'B': 2}

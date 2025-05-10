@@ -40,6 +40,9 @@ class _DatasetClassMeta(type, Evaluatable[A]):
     def evaluate(cls, options: Options) -> A:
         return cls(options)
 
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
+
     def validate(cls, options: Options) -> None:
         for key in dir(cls):
             dependency = getattr(cls, key, None)

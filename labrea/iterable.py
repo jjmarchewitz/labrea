@@ -41,6 +41,9 @@ class Iter(Evaluatable[Iterable[A]]):
         """Evaluate the evaluatables and return an iterable of the results."""
         return (evaluatable.evaluate(options) for evaluatable in self.evaluatables)
 
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
+
     def validate(self, options: Options) -> None:
         """Validate that all evaluatables can be evaluated."""
         for evaluatable in self.evaluatables:
@@ -115,6 +118,9 @@ class Map(Evaluatable[Iterable[Tuple[Dict[str, JSON], A]]]):
     def evaluate(self, options: Options) -> Iterable[Tuple[Dict[str, JSON], A]]:
         """Evaluate the evaluatable with each set of options."""
         return self._iter(options).evaluate(options)
+
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
 
     def validate(self, options: Options) -> None:
         """Validate that both the option iterables and the evaluatable can be evaluated."""

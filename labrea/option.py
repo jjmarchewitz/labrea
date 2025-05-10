@@ -155,7 +155,6 @@ class Option(Evaluatable[A]):
         """
         DOC:
         """
-        breakpoint()
         value = self.evaluate(options)
         return self.set(options, value)
 
@@ -368,6 +367,9 @@ class WithOptions(Evaluatable[B]):
         """Evaluate the wrapped Evaluatable object with the provided options."""
         return self.evaluatable.evaluate(self._options(options))
 
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
+
     def validate(self, options: Options) -> None:
         """Validate the wrapped Evaluatable object with the provided options."""
         self.evaluatable.validate(self._options(options))
@@ -434,7 +436,6 @@ class _AllOptions(Evaluatable[Options]):
     def evaluate_options(self, options) -> Options:
         """DOC:"""
         breakpoint()
-        pass
 
     def validate(self, options: Options) -> None:
         _ = self.evaluate(options)
@@ -479,6 +480,9 @@ class Namespace(Evaluatable[Options]):
 
     def evaluate(self, options: Options) -> Options:
         return get_dotted_key(self._key, self._populate({}, options))
+
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
 
     def validate(self, options: Options) -> None:
         for name in self._members:

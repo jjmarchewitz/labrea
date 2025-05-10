@@ -44,7 +44,6 @@ class PipelineStep(Evaluatable[Callable[[A], B]], Transformation[A, B]):
     def evaluate_options(self, options: Options) -> Options:
         """DOC:"""
         breakpoint()
-        pass
 
     def validate(self, options: Options) -> None:
         """Validate the pipeline step."""
@@ -152,7 +151,6 @@ class Pipeline(
     def evaluate_options(self, options) -> Options:
         """DOC:"""
         breakpoint()
-        pass
 
     def validate(self, options: Options) -> None:
         """Validate the pipeline."""

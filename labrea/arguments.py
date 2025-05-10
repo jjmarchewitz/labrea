@@ -62,7 +62,6 @@ class EvaluatableArgs(Generic[P], Evaluatable["P.args"]):
 
     def evaluate_options(self, options) -> Options:
         breakpoint()
-        pass
 
     def validate(self, options: Options) -> None:
         for arg in self.args:

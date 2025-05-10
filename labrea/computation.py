@@ -2,14 +2,8 @@ from abc import ABC, abstractmethod
 from typing import Callable, List, Optional, Set, TypeVar
 
 from .option import Option
-from .types import (
-    Evaluatable,
-    Explainable,
-    MaybeEvaluatable,
-    Options,
-    Transformation,
-    Validatable,
-)
+from .types import (Evaluatable, Explainable, MaybeEvaluatable, Options,
+                    Transformation, Validatable)
 
 A = TypeVar("A")
 
@@ -154,6 +148,9 @@ class Computation(Evaluatable[A]):
             self.effect.transform(value, options)
 
         return value
+
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
 
     def validate(self, options: Options) -> None:
         """Validate the Evaluatable and the Effect."""

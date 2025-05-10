@@ -207,6 +207,9 @@ class PartialApplication(Generic[P, A], Evaluatable[Callable[..., A]]):
         args = self.arguments.evaluate(options)
         return functools.partial(func, *args.args, **args.kwargs)
 
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
+
     def validate(self, options: Options) -> None:
         self.func.validate(options)
         self.arguments.validate(options)
