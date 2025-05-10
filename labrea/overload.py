@@ -69,6 +69,10 @@ class Overloaded(Evaluatable[A]):
         """Evaluate the dispatch, and then evaluate the selected implementation."""
         return self.switch.evaluate(options)
 
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
+        pass
+
     def validate(self, options: Options) -> None:
         """Validate the dispatch and the selected implementation."""
         self.switch.validate(options)

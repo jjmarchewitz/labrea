@@ -1,29 +1,11 @@
 import functools
 import warnings
-from typing import (
-    Any,
-    Callable,
-    Container,
-    Dict,
-    Generic,
-    List,
-    Mapping,
-    Optional,
-    Set,
-    Type,
-    TypeVar,
-    Union,
-    cast,
-    overload,
-)
+from typing import (Any, Callable, Container, Dict, Generic, List, Mapping,
+                    Optional, Set, Type, TypeVar, Union, cast, overload)
 
 from confectioner import mix
-from confectioner.templating import (
-    dotted_key_exists,
-    get_dotted_key,
-    resolve,
-    set_dotted_key,
-)
+from confectioner.templating import (dotted_key_exists, get_dotted_key,
+                                     resolve, set_dotted_key)
 
 from ._missing import MISSING, MaybeMissing
 from .application import FunctionApplication
@@ -169,6 +151,14 @@ class Option(Evaluatable[A]):
 
         return value
 
+    def evaluate_options(self, options) -> Options:
+        """
+        DOC:
+        """
+        breakpoint()
+        value = self.evaluate(options)
+        return self.set(options, value)
+
     def validate(self, options: Options) -> None:
         """Validates that the key exists in the options dictionary.
 
@@ -273,7 +263,8 @@ class Option(Evaluatable[A]):
                 Option MY_PACKAGE.MODULE-2.A (default 10)
         """
         if isinstance(__namespace, str):
-            return lambda cls: Namespace._from_type(cls, name=__namespace)  # type: ignore[return-value]
+            # type: ignore[return-value]
+            return lambda cls: Namespace._from_type(cls, name=__namespace)
         return Namespace._from_type(__namespace)
 
     @staticmethod
@@ -439,6 +430,11 @@ class _AllOptions(Evaluatable[Options]):
             return resolve(options)
         except KeyError as e:
             raise KeyNotFoundError(e.args[0], self) from e
+
+    def evaluate_options(self, options) -> Options:
+        """DOC:"""
+        breakpoint()
+        pass
 
     def validate(self, options: Options) -> None:
         _ = self.evaluate(options)

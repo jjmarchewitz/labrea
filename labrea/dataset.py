@@ -8,19 +8,8 @@ else:
 import functools
 import logging
 import typing
-from typing import (
-    Any,
-    Callable,
-    Dict,
-    Generic,
-    Hashable,
-    List,
-    Optional,
-    Set,
-    TypeVar,
-    Union,
-    cast,
-)
+from typing import (Any, Callable, Dict, Generic, Hashable, List, Optional,
+                    Set, TypeVar, Union, cast)
 
 from confectioner import mix
 
@@ -128,6 +117,10 @@ class Dataset(Evaluatable[A]):
     def evaluate(self, options: Options) -> A:
         """Evaluates the dataset using the provided options."""
         return self._composed.evaluate(options)
+
+    def evaluate_options(self, options) -> Options:
+        """DOC:"""
+        return self._composed.evaluate_options(options)
 
     def validate(self, options: Options) -> None:
         """Validates the dataset using the provided options."""

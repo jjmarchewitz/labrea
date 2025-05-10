@@ -1,18 +1,8 @@
 import json
 from abc import ABC, abstractmethod
 from copy import deepcopy
-from typing import (
-    Callable,
-    Generic,
-    Mapping,
-    Optional,
-    Protocol,
-    Sequence,
-    Set,
-    TypeVar,
-    Union,
-    overload,
-)
+from typing import (Callable, Generic, Mapping, Optional, Protocol, Sequence,
+                    Set, TypeVar, Union, overload)
 
 from confectioner.templating import get_dotted_key
 
@@ -244,6 +234,13 @@ class Evaluatable(Generic[A], Cacheable, Explainable, Validatable, ABC):
         raise NotImplementedError  # pragma: nocover
 
     @abstractmethod
+    def evaluate_options(self, options: Options) -> Options:
+        """
+        DOC:
+        """
+        raise NotImplementedError
+
+    @abstractmethod
     def __repr__(self) -> str:
         """Return a string representation of the object.
 
@@ -428,6 +425,11 @@ class Value(Evaluatable[A]):
             return deepcopy(self.value)
         except Exception:  # noqa: E722
             return self.value
+
+    def evaluate_options(self, options: Options) -> Options:
+        """DOC:"""
+        breakpoint()
+        pass
 
     def validate(self, options: Options) -> None:
         """Always passes validation."""

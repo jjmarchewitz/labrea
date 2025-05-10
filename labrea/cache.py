@@ -1,5 +1,6 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Dict, Generic, Optional, Set, TypeVar, Union, overload
+from typing import (Any, Callable, Dict, Generic, Optional, Set, TypeVar,
+                    Union, overload)
 
 from . import runtime
 from .option import Option
@@ -336,6 +337,10 @@ class Cached(Evaluatable[A]):
         value = self.evaluatable.evaluate(options)
 
         return CacheSetRequest(self.evaluatable, options, value, self.cache).run()
+
+    def evaluate_options(self, options) -> Options:
+        # TODO: figure out the caching stuff
+        return self.evaluatable.evaluate_options(options)
 
     def validate(self, options: Options) -> None:
         """If the value is not in the cache, validate the evaluatable."""

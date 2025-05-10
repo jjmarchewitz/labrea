@@ -6,20 +6,12 @@ else:
     from typing import Concatenate, ParamSpec
 
 import inspect
-from typing import (
-    Any,
-    Callable,
-    Iterable,
-    Iterator,
-    Optional,
-    Set,
-    TypeVar,
-    cast,
-    overload,
-)
+from typing import (Any, Callable, Iterable, Iterator, Optional, Set, TypeVar,
+                    cast, overload)
 
 from .application import PartialApplication
-from .types import Evaluatable, MaybeEvaluatable, Options, Transformation, Value
+from .types import (Evaluatable, MaybeEvaluatable, Options, Transformation,
+                    Value)
 
 A = TypeVar("A")
 B = TypeVar("B", covariant=True)
@@ -48,6 +40,11 @@ class PipelineStep(Evaluatable[Callable[[A], B]], Transformation[A, B]):
     def evaluate(self, options: Options) -> Callable[[A], B]:
         """Evaluate the pipeline step, returning a function that applies the transformation."""
         return self.step.evaluate(options)
+
+    def evaluate_options(self, options: Options) -> Options:
+        """DOC:"""
+        breakpoint()
+        pass
 
     def validate(self, options: Options) -> None:
         """Validate the pipeline step."""
@@ -151,6 +148,11 @@ class Pipeline(
         tail = self.tail.evaluate(options)
         rest = self.rest.evaluate(options) if self.rest else lambda x: x
         return lambda x: tail(rest(x))
+
+    def evaluate_options(self, options) -> Options:
+        """DOC:"""
+        breakpoint()
+        pass
 
     def validate(self, options: Options) -> None:
         """Validate the pipeline."""

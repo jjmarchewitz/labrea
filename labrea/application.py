@@ -7,7 +7,8 @@ else:
 
 import functools
 import inspect
-from typing import Callable, Dict, Generic, Optional, Set, TypeVar, Union, overload
+from typing import (Callable, Dict, Generic, Optional, Set, TypeVar, Union,
+                    overload)
 
 from .arguments import Arguments, arguments
 from .types import Evaluatable, MaybeEvaluatable, Options
@@ -58,6 +59,10 @@ class FunctionApplication(Generic[P, A], Evaluatable[A]):
         func = self.func.evaluate(options)
         args = self.arguments.evaluate(options)
         return func(*args.args, **args.kwargs)
+
+    def evaluate_options(self, options) -> Options:
+        # TODO: somehow incorporate func
+        return self.arguments.evaluate_options(options)
 
     def validate(self, options: Options) -> None:
         self.func.validate(options)

@@ -60,6 +60,10 @@ class EvaluatableArgs(Generic[P], Evaluatable["P.args"]):
     def evaluate(self, options: Options) -> "P.args":
         return tuple(arg.evaluate(options) for arg in self.args)  # type: ignore
 
+    def evaluate_options(self, options) -> Options:
+        breakpoint()
+        pass
+
     def validate(self, options: Options) -> None:
         for arg in self.args:
             arg.validate(options)
@@ -90,6 +94,14 @@ class EvaluatableKwargs(Generic[P], Evaluatable["P.kwargs"]):
 
     def evaluate(self, options: Options) -> "P.kwargs":
         return {key: value.evaluate(options) for key, value in self.kwargs.items()}  # type: ignore
+
+    def evaluate_options(self, options) -> Options:
+        output = options
+
+        for key, value in self.kwargs.items():
+            output = value.evaluate_options(output)
+
+        return output
 
     def validate(self, options: Options) -> None:
         for value in self.kwargs.values():
@@ -129,6 +141,10 @@ class EvaluatableArguments(Evaluatable[Arguments[P]]):
 
     def evaluate(self, options: Options) -> Arguments[P]:
         return Arguments(*self.args.evaluate(options), **self.kwargs.evaluate(options))
+
+    def evaluate_options(self, options) -> Options:
+        # TODO: add args
+        return self.kwargs.evaluate_options(options)
 
     def validate(self, options: Options) -> None:
         self.args.validate(options)
