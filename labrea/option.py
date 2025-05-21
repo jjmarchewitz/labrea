@@ -186,7 +186,7 @@ class Option(Evaluatable[A]):
             default_eval_opts = self.default.evaluate_options(options)
 
             # Combine the actual result with the evaluate_options dict so that
-            # the result shows up under `self` as well as the default option.
+            # the result shows up under `self.key` as well as the default option.
             return mix(default_eval_opts, default_eval)
         else:
             raise KeyNotFoundError(self.key, self)
