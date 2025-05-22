@@ -7,6 +7,8 @@ else:
 
 from typing import Dict, Generic, Optional, Set, Tuple
 
+from confectioner import mix
+
 from .types import Evaluatable, MaybeEvaluatable, Options
 
 P = ParamSpec("P")
@@ -61,10 +63,10 @@ class EvaluatableArgs(Generic[P], Evaluatable["P.args"]):
         return tuple(arg.evaluate(options) for arg in self.args)  # type: ignore
 
     def evaluate_options(self, options: Options) -> Options:
-        output = options
+        output = {}
 
         for arg in self.args:
-            output = arg.evaluate_options(output)
+            output = mix(output, arg.evaluate_options(options))
 
         return output
 
@@ -100,12 +102,10 @@ class EvaluatableKwargs(Generic[P], Evaluatable["P.kwargs"]):
         return {key: value.evaluate(options) for key, value in self.kwargs.items()}  # type: ignore
 
     def evaluate_options(self, options: Options) -> Options:
-        output = options
+        output = {}
 
-        # JAKE: this shouldn't return any options it doesnt use
-
-        for key, value in self.kwargs.items():
-            output = value.evaluate_options(output)
+        for value in self.kwargs.values():
+            output = mix(output, value.evaluate_options(options))
 
         return output
 
@@ -149,8 +149,10 @@ class EvaluatableArguments(Evaluatable[Arguments[P]]):
         return Arguments(*self.args.evaluate(options), **self.kwargs.evaluate(options))
 
     def evaluate_options(self, options: Options) -> Options:
-        options = self.args.evaluate_options(options)
-        return self.kwargs.evaluate_options(options)
+        args_opts = self.args.evaluate_options(options)
+        kwargs_opts = self.kwargs.evaluate_options(options)
+
+        return mix(args_opts, kwargs_opts)
 
     def validate(self, options: Options) -> None:
         self.args.validate(options)

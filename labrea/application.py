@@ -9,6 +9,8 @@ import functools
 import inspect
 from typing import Callable, Dict, Generic, Optional, Set, TypeVar, Union, overload
 
+from confectioner import mix
+
 from .arguments import Arguments, arguments
 from .types import Evaluatable, MaybeEvaluatable, Options
 
@@ -60,8 +62,10 @@ class FunctionApplication(Generic[P, A], Evaluatable[A]):
         return func(*args.args, **args.kwargs)
 
     def evaluate_options(self, options: Options) -> Options:
-        # TODO: somehow incorporate func
-        return self.arguments.evaluate_options(options)
+        func_opts = self.func.evaluate_options(options)
+        arg_opts = self.arguments.evaluate_options(options)
+
+        return mix(arg_opts, func_opts)
 
     def validate(self, options: Options) -> None:
         self.func.validate(options)
@@ -207,7 +211,10 @@ class PartialApplication(Generic[P, A], Evaluatable[Callable[..., A]]):
         return functools.partial(func, *args.args, **args.kwargs)
 
     def evaluate_options(self, options: Options) -> Options:
-        return self.arguments.evaluate_options(options)
+        func_opts = self.func.evaluate_options(options)
+        arg_opts = self.arguments.evaluate_options(options)
+
+        return mix(func_opts, arg_opts)
 
     def validate(self, options: Options) -> None:
         self.func.validate(options)
