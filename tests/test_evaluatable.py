@@ -11,14 +11,14 @@ def test_value():
     assert value.validate({}) is None
     assert value.keys({}) == set()
     assert value.explain() == value.explain({}) == set()
-    assert value.evaluate_options({'A': 1}) == {}
+    assert value.evaluate_options({"A": 1}) == {}
     assert repr(value) == "Value(42)"
     assert value == value
     assert value != Value(43)
 
     class Uncopyable:
         def __deepcopy__(self, memo):
-            raise NotImplementedError('Cannot copy this.')
+            raise NotImplementedError("Cannot copy this.")
 
     uncopyable = Uncopyable()
 
@@ -30,20 +30,21 @@ def test_unit():
 
 
 @pytest.mark.parametrize(
-    'wrapper,method',
+    "wrapper,method",
     [
         (wrapper, method)
         for wrapper in (Value, lambda x: x)
-        for method in ('apply', 'rshift')
-    ]
+        for method in ("apply", "rshift")
+    ],
 )
 def test_apply(wrapper, method):
+    # JAKE: should I add to any other cases in this file?
     value = Value(42)
 
     def incr(x):
         return x + 1
 
-    if method == 'apply':
+    if method == "apply":
         apply = value.apply(wrapper(incr))
     else:
         apply = value >> wrapper(incr)
@@ -78,21 +79,26 @@ def test_type_error():
 
 
 def test_error_str():
-    assert str(EvaluationError('message', Value(1))) == "Originating in Value(1) | message"
-    assert str(KeyNotFoundError('key', Value(1))) == "Originating in Value(1) | Key 'key' not found"
+    assert (
+        str(EvaluationError("message", Value(1))) == "Originating in Value(1) | message"
+    )
+    assert (
+        str(KeyNotFoundError("key", Value(1)))
+        == "Originating in Value(1) | Key 'key' not found"
+    )
 
 
 def test_fingerprint():
     value = Value(42)
-    option = Option('A')
+    option = Option("A")
 
-    assert value.fingerprint({}) == value.fingerprint({'A': 1})
-    assert value.fingerprint({'A': 1}) != option.fingerprint({'A': 1})
-    assert option.fingerprint({'A': 1}) == option.fingerprint({'A': 1})
-    assert option.fingerprint({'A': 1}) != option.fingerprint({'A': 2})
-    assert option.fingerprint({'A': 1}) == option.fingerprint({'A': 1, 'V': 2})
+    assert value.fingerprint({}) == value.fingerprint({"A": 1})
+    assert value.fingerprint({"A": 1}) != option.fingerprint({"A": 1})
+    assert option.fingerprint({"A": 1}) == option.fingerprint({"A": 1})
+    assert option.fingerprint({"A": 1}) != option.fingerprint({"A": 2})
+    assert option.fingerprint({"A": 1}) == option.fingerprint({"A": 1, "V": 2})
 
 
 def test_result():
-    option = Option('A')
+    option = Option("A")
     assert option.result is option
