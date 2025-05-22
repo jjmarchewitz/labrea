@@ -66,7 +66,7 @@ class EvaluatableArgs(Generic[P], Evaluatable["P.args"]):
         output = {}
 
         for arg in self.args:
-            output = mix(output, arg.evaluate_options(options))
+            output = output | arg.evaluate_options(options)
 
         return output
 
@@ -105,7 +105,7 @@ class EvaluatableKwargs(Generic[P], Evaluatable["P.kwargs"]):
         output = {}
 
         for value in self.kwargs.values():
-            output = mix(output, value.evaluate_options(options))
+            output = output | value.evaluate_options(options)
 
         return output
 

@@ -42,7 +42,8 @@ class Coalesce(Evaluatable[A]):
         return self._delegate("evaluate", options)
 
     def evaluate_options(self, options: Options) -> Options:
-        breakpoint()
+        """DOC:"""
+        return self._delegate("evaluate_options", options)
 
     def validate(self, options: Options) -> None:
         """Determines if any of the Evaluatables can be validated."""
@@ -57,6 +58,7 @@ class Coalesce(Evaluatable[A]):
         try:
             return self._delegate("explain", options)
         except EvaluationError:
+            # JAKE: why are we suppressing this error?
             return self.members[-1].explain(options)
 
     def _delegate(self, method: str, options: Optional[Options] = None) -> Any:

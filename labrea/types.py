@@ -14,6 +14,7 @@ from typing import (
     overload,
 )
 
+from confectioner import mix
 from confectioner.templating import get_dotted_key
 
 from .exceptions import EvaluationError, InsufficientInformationError
@@ -500,7 +501,8 @@ class Apply(Generic[A, B], Evaluatable[B]):
         return self.func(options)(value)
 
     def evaluate_options(self, options: Options) -> Options:
-        breakpoint()
+        """DOC:"""
+        return self.evaluatable.evaluate_options(options)
 
     def validate(self, options: Options) -> None:
         """Validate the source object and the function to apply to it."""

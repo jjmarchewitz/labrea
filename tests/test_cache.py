@@ -1,14 +1,13 @@
-from typing import List
 import uuid
+from typing import List
 
 import pytest
 
-from confectioner.templating import set_dotted_key
-
-from labrea.application import FunctionApplication
-from labrea.cache import cached, NoCache
-from labrea.option import Option
 import labrea.cache
+from confectioner.templating import set_dotted_key
+from labrea.application import FunctionApplication
+from labrea.cache import NoCache, cached
+from labrea.option import Option
 
 
 def test_cached():
@@ -17,6 +16,8 @@ def test_cached():
 
     assert uuid4() != uuid4()
     assert cached_uuid4() == cached_uuid4()
+
+    # JAKE: need to do this. cached_uuid4() is equivalent to cached_uuid4.evaluate()
 
 
 def test_nocache():
@@ -30,26 +31,28 @@ def test_nocache():
 def test_cached_decorator():
     @cached
     @FunctionApplication.lift
-    def uuid4_list(n: int = Option('N')) -> List[uuid.UUID]:
+    def uuid4_list(n: int = Option("N")) -> List[uuid.UUID]:
         return [uuid.uuid4() for _ in range(n)]
 
-    assert uuid4_list({'N': 3}) == uuid4_list({'N': 3})
-    assert uuid4_list({'N': 3}) != uuid4_list({'N': 4})
+    assert uuid4_list({"N": 3}) == uuid4_list({"N": 3})
+    assert uuid4_list({"N": 3}) != uuid4_list({"N": 4})
 
     @cached(NoCache())
     @FunctionApplication.lift
-    def uuid4_list(n: int = Option('N')) -> List[uuid.UUID]:
+    def uuid4_list(n: int = Option("N")) -> List[uuid.UUID]:
         return [uuid.uuid4() for _ in range(n)]
 
 
-@pytest.mark.parametrize('method', ['ctx', 'LABREA.CACHE.DISABLED', 'LABREA.CACHE.DISABLE'])
+@pytest.mark.parametrize(
+    "method", ["ctx", "LABREA.CACHE.DISABLED", "LABREA.CACHE.DISABLE"]
+)
 def test_disable_cache(method):
     uuid4 = cached(FunctionApplication(uuid.uuid4))
 
     a = uuid4()
     b = uuid4()
 
-    if method == 'ctx':
+    if method == "ctx":
         with labrea.cache.disabled():
             c = uuid4()
             d = uuid4()
