@@ -112,11 +112,29 @@ class Cacheable(ABC):
         """
         raise NotImplementedError  # pragma: nocover
 
-    def fingerprint(self, options: Options) -> bytes:
-        """Return a fingerprint, which is a unique identifier for a given evaluation."""
-        return json.dumps(
+    def fingerprint(self, options: Options, cache_label: str = "") -> bytes:
+        """Return a fingerprint, which is a unique identifier for a given evaluation.
+
+        Arguments
+        ---------
+        options : Options
+            The options dictionary to validate against.
+        cache_label : str
+            A label that is added to the beginning of the fingerprint. This is useful
+            for cacheing multiple different types of data with the same execution.
+
+        Returns
+        -------
+        bytes
+            A unique string of bytes representing the given evaluation
+        """
+        encoded_options = json.dumps(
             [{key: get_dotted_key(key, options)} for key in sorted(self.keys(options))]
         ).encode()
+
+        encoded_label = cache_label.encode()
+
+        return encoded_label + b" /// " + encoded_options
 
     def __labrea_keys__(self, options: Options) -> Set[str]:
         raise NotImplementedError
@@ -523,7 +541,10 @@ class Bind(Generic[A, B], Evaluatable[B]):
         return self.func(self.evaluatable(options)).evaluate(options)
 
     def evaluate_options(self, options: Options) -> Options:
-        breakpoint()
+        """DOC:"""
+        return self.evaluatable.evaluate_options(options) | self.func(
+            self.evaluatable(options)
+        ).evaluate_options(options)
 
     def validate(self, options: Options) -> None:
         """Validate the source object and the function"""

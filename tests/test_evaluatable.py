@@ -69,6 +69,21 @@ def test_bind():
     assert bind.explain() == set()
     assert repr(bind) == f"Value(42).bind({repr(incr)})"
 
+    option_a = Option("A")
+
+    def choose(bool_arg: bool) -> Option:
+        return Option("X") if bool_arg else Option("Y")
+
+    bind = option_a.bind(choose)
+    select_x = {"A": True, "X": 1, "Y": 2, "Z": 3}
+    select_y = {"A": False, "X": 1, "Y": 2, "Z": 3}
+
+    assert bind.evaluate(select_x) == 1
+    assert bind.evaluate(select_y) == 2
+    assert bind.evaluate_options(select_x) == {"A": True, "X": 1}
+    assert bind.evaluate_options(select_y) == {"A": False, "Y": 2}
+    # other methods are already validated above
+
 
 def test_type_error():
     with pytest.raises(TypeError):
@@ -92,11 +107,49 @@ def test_fingerprint():
     value = Value(42)
     option = Option("A")
 
+    # No label
     assert value.fingerprint({}) == value.fingerprint({"A": 1})
     assert value.fingerprint({"A": 1}) != option.fingerprint({"A": 1})
     assert option.fingerprint({"A": 1}) == option.fingerprint({"A": 1})
     assert option.fingerprint({"A": 1}) != option.fingerprint({"A": 2})
     assert option.fingerprint({"A": 1}) == option.fingerprint({"A": 1, "V": 2})
+
+    l1 = "LABEL1"
+    l2 = "LABEL2"
+
+    # Label 1
+    assert value.fingerprint({}, cache_label=l1) == value.fingerprint(
+        {"A": 1}, cache_label=l1
+    )
+    assert value.fingerprint({"A": 1}, cache_label=l1) != option.fingerprint(
+        {"A": 1}, cache_label=l1
+    )
+    assert option.fingerprint({"A": 1}, cache_label=l1) == option.fingerprint(
+        {"A": 1}, cache_label=l1
+    )
+    assert option.fingerprint({"A": 1}, cache_label=l1) != option.fingerprint(
+        {"A": 2}, cache_label=l1
+    )
+    assert option.fingerprint({"A": 1}, cache_label=l1) == option.fingerprint(
+        {"A": 1, "V": 2}, cache_label=l1
+    )
+
+    # Label 1 != Label 2
+    assert value.fingerprint({}, cache_label=l1) != value.fingerprint(
+        {"A": 1}, cache_label=l2
+    )
+    assert value.fingerprint({"A": 1}, cache_label=l1) != option.fingerprint(
+        {"A": 1}, cache_label=l2
+    )
+    assert option.fingerprint({"A": 1}, cache_label=l1) != option.fingerprint(
+        {"A": 1}, cache_label=l2
+    )
+    assert option.fingerprint({"A": 1}, cache_label=l1) != option.fingerprint(
+        {"A": 2}, cache_label=l2
+    )
+    assert option.fingerprint({"A": 1}, cache_label=l1) != option.fingerprint(
+        {"A": 1, "V": 2}, cache_label=l2
+    )
 
 
 def test_result():

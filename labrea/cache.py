@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from dataclasses import dataclass
 from typing import Any, Callable, Dict, Generic, Optional, Set, TypeVar, Union, overload
 
 from . import runtime
@@ -156,19 +157,24 @@ class MemoryCache(Cache[A]):
     def __init__(self) -> None:
         self._cache = {}
 
-    def get(self, evaluatable: Evaluatable, options: Options) -> A:
+    def get(self, evaluatable: Evaluatable, options: Options, label: str = "") -> A:
         try:
-            return self._cache[evaluatable.fingerprint(options)]
+            return self._cache[evaluatable.fingerprint(options, label)]
         except KeyError as e:
             raise CacheGetFailure(evaluatable, options, self) from e
 
-    def set(self, evaluatable: Evaluatable, options: Options, value: A) -> None:
-        self._cache[evaluatable.fingerprint(options)] = value
+    def set(
+        self, evaluatable: Evaluatable, options: Options, value: A, label: str = ""
+    ) -> None:
+        self._cache[evaluatable.fingerprint(options, label)] = value
 
-    def exists(self, evaluatable: Evaluatable, options: Options) -> bool:
-        return evaluatable.fingerprint(options) in self._cache
+    def exists(
+        self, evaluatable: Evaluatable, options: Options, label: str = ""
+    ) -> bool:
+        return evaluatable.fingerprint(options, label) in self._cache
 
 
+@dataclass
 class CacheSetRequest(runtime.Request[A]):
     """A request to set a value in a cache.
 
@@ -188,16 +194,10 @@ class CacheSetRequest(runtime.Request[A]):
     options: Options
     value: A
     cache: Cache[A]
-
-    def __init__(
-        self, evaluatable: Evaluatable[A], options: Options, value: A, cache: Cache[A]
-    ):
-        self.evaluatable = evaluatable
-        self.options = options
-        self.value = value
-        self.cache = cache
+    cache_label: str = ""
 
 
+@dataclass
 class CacheGetRequest(runtime.Request[A]):
     """A request to get a value from a cache.
 
@@ -214,13 +214,10 @@ class CacheGetRequest(runtime.Request[A]):
     evaluatable: Evaluatable[A]
     options: Options
     cache: Cache[A]
-
-    def __init__(self, evaluatable: Evaluatable, options: Options, cache: Cache[A]):
-        self.evaluatable = evaluatable
-        self.options = options
-        self.cache = cache
+    cache_label: str = ""
 
 
+@dataclass
 class CacheExistsRequest(runtime.Request[bool]):
     """A request to check if a value exists in a cache.
 
@@ -237,11 +234,7 @@ class CacheExistsRequest(runtime.Request[bool]):
     evaluatable: Evaluatable
     options: Options
     cache: Cache
-
-    def __init__(self, evaluatable: Evaluatable, options: Options, cache: Cache):
-        self.evaluatable = evaluatable
-        self.options = options
-        self.cache = cache
+    cache_label: str = ""
 
 
 def _cache_disabled(
@@ -261,6 +254,7 @@ def _set_cache_handler(request: CacheSetRequest[A]) -> A:
     try:
         return request.cache.get(request.evaluatable, request.options)
     except CacheGetFailure:
+        # JAKE: why are we ignoring this exception?
         return request.value
 
 
@@ -302,6 +296,7 @@ def disabled() -> runtime.Runtime:
     )
 
 
+@dataclass
 class Cached(Evaluatable[A]):
     """A class representing an Evaluatable that may be cached.
 
@@ -321,10 +316,6 @@ class Cached(Evaluatable[A]):
     evaluatable: Evaluatable[A]
     cache: Cache[A]
 
-    def __init__(self, evaluatable: Evaluatable[A], cache: Cache[A]):
-        self.evaluatable = evaluatable
-        self.cache = cache
-
     def evaluate(self, options: Options) -> A:
         """Return the (possibly cached) result of evaluating the evaluatable."""
         if CacheExistsRequest(self.evaluatable, options, self.cache).run():
@@ -339,7 +330,16 @@ class Cached(Evaluatable[A]):
 
     def evaluate_options(self, options: Options) -> Options:
         # TODO: figure out the caching stuff
-        return self.evaluatable.evaluate_options(options)
+        # return self.evaluatable.evaluate_options(options)
+        if CacheExistsRequest(self.evaluatable, options, self.cache).run():
+            try:
+                return CacheGetRequest(self.evaluatable, options, self.cache).run()
+            except CacheGetFailure:
+                pass
+
+        value = self.evaluatable.evaluate(options)
+
+        return CacheSetRequest(self.evaluatable, options, value, self.cache).run()
 
     def validate(self, options: Options) -> None:
         """If the value is not in the cache, validate the evaluatable."""
